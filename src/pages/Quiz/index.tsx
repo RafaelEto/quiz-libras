@@ -44,10 +44,6 @@ export default function Quiz() {
     
     async function handleNextStep(answer: string, questionId: string) {
         try {
-            if (step === 10) {
-                handleFinishQuiz()
-            }
-
             const response = await fetch(`http://localhost:3000/answers/validate/${questionId}`, {
                 method: "POST",
                 body: JSON.stringify({answer}),
@@ -55,11 +51,19 @@ export default function Quiz() {
                     'Content-Type': 'application/json'
                 }
             });
+
             const responseData = await response.json();
 
             if (responseData.status === "hit") {
                 score.current = score.current + 1
+                console.log(score.current, "score dessa bomba");
             }
+
+            if (step === 10) {
+                handleFinishQuiz()
+                return
+            }
+
             setCurrentQuestion(questions[step])
             setStep(prev => prev + 1)
         } catch (error) {
