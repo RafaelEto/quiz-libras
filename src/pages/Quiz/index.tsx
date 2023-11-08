@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Quiz() {
     const navigate = useNavigate();
-    const totalTime = 300;
+    const totalTime = 600;
     const [timeLeft, setTimeLeft] = useState(totalTime);
     const [step, setStep] = useState(1);
     const [questions, setQuestions] = useState<Question[]>([]);
@@ -35,12 +35,13 @@ export default function Quiz() {
         const timer = setInterval(() => {
         if (timeLeft > 0) {
             setTimeLeft(timeLeft - 1);
+        } else {
+            navigate("/menu")
         }
         }, 1000);
 
         return () => clearInterval(timer);
     }, [timeLeft]);
-
     
     async function handleNextStep(answer: string, questionId: string) {
         try {
