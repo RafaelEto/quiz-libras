@@ -14,7 +14,7 @@ export default function Quiz() {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestion, setCurrentQuestion] = useState<Question>({
         _id: "",
-        title: "",
+        video_url: "",
         answers: {
             a: "",
             b: "",
