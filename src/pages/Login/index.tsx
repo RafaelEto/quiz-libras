@@ -81,7 +81,7 @@ export default function Login() {
         >
           Login
         </Heading>
-        <Image src="/src/assets/img/logo-login.png" marginBottom={"60px"} />
+        <Image src="https://i.imgur.com/s767NVN.png" marginBottom={"60px"} />
         <form onSubmit={handleSubmit(onSubmit)} style={{ textAlign: "center" }}>
           <Input
             {...register("name")}

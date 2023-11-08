@@ -46,7 +46,7 @@ export default function Menu() {
         margin={"0 auto"}
       >
         <Image
-          src="/src/assets/img/logo-quiz-libras.png"
+          src="https://i.imgur.com/ERNTvDY.png"
           display={"block"}
           width={"max-content"}
           margin={"0 auto 40px"}
