@@ -12,28 +12,21 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
-import { config } from "../../project.config";
 import { useEffect, useState } from "react";
+import { config } from "../../project.config";
 
 const schema = z.object({
-  password: z.string().min(5, "Senha deve conter 5 caracteres."),
-  email: z.string().email("Email inválido."),
+  name: z.string().min(2, "Nome inválido."),
+  password: z.string().min(5, "Senha tem que ter no mínimo 5 caracteres."),
+  email: z.string().email("Email inválido, tente novamente."),
 });
 
 type FormData = z.infer<typeof schema>;
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [loginErrorMessage, setLoginErrorMessage] = useState("");
-
-  useEffect(() => {
-    const isLogged = localStorage.getItem("isLogged");
-    if (isLogged) {
-      navigate("/menu");
-    }
-  }, []);
-
+  const [registerErrorMessage, setRegisterErrorMessage] = useState("");
   const {
     register,
     handleSubmit,
@@ -42,9 +35,17 @@ export default function Login() {
     resolver: zodResolver(schema),
   });
 
+  useEffect(() => {
+    const isLogged = localStorage.getItem("isLogged");
+
+    if (isLogged) {
+      navigate("/menu");
+    }
+  });
+
   const onSubmit = async (data: FormData) => {
     setLoading(true);
-    const response = await fetch(`${config.NODE_URL}/login`, {
+    const response = await fetch(`${config.NODE_URL}/user`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -53,16 +54,15 @@ export default function Login() {
       credentials: "include",
     });
 
-    if (response.status === 200) {
-      localStorage.setItem("isLogged", "true");
-      navigate("/menu");
+    if (response.status === 201) {
+      navigate("/");
+      setLoading(false);
       return;
     }
 
-    if (response.status === 401) {
-      setLoginErrorMessage("Email ou senhas inválidos, tente novamente.");
-    }
-
+    setRegisterErrorMessage(
+      "Já existe uma conta associada a este e-mail, tente novamente."
+    );
     setLoading(false);
   };
 
@@ -92,13 +92,24 @@ export default function Login() {
           lineHeight={"40px"}
           marginBottom={"40px"}
         >
-          Login
+          Cadastre-se
         </Heading>
         <Image src="https://i.imgur.com/s767NVN.png" marginBottom={"60px"} />
         <form
           onSubmit={handleSubmit(onSubmit)}
           style={{ textAlign: "center", width: "70%" }}
         >
+          <Box marginBottom={"32px"}>
+            <Input
+              {...register("name")}
+              placeholder="Nome"
+              _placeholder={{ opacity: 0.6, color: "#000" }}
+              height={"50px"}
+              borderRadius={"0"}
+              border={"1px solid #333"}
+            />
+            {errors.name && <Text fontSize="14px">{errors.name.message}</Text>}
+          </Box>
           <Box marginBottom={"32px"}>
             <Input
               {...register("email")}
@@ -112,15 +123,16 @@ export default function Login() {
               <Text fontSize="14px">{errors.email.message}</Text>
             )}
           </Box>
+
           <Box marginBottom={"16px"}>
             <Input
               {...register("password")}
               placeholder="Senha"
               _placeholder={{ opacity: 0.6, color: "#000" }}
-              type="password"
               height={"50px"}
               borderRadius={"0"}
               border={"1px solid #333"}
+              type="password"
             />
             {errors.password && (
               <Text fontSize="14px">{errors.password.message}</Text>
@@ -139,14 +151,14 @@ export default function Login() {
               type="submit"
               isLoading={loading}
             >
-              Login
+              Cadastrar
             </Button>
-            {loginErrorMessage && (
-              <Text fontSize="14px" color="red">
-                {loginErrorMessage}
+            {registerErrorMessage && (
+              <Text fontSize="12px" color="red">
+                {registerErrorMessage}
               </Text>
             )}
-            <Link onClick={() => navigate("/register")}>Cadastre-se</Link>
+            <Link onClick={() => navigate("/")}>Já possui cadastro?</Link>
           </Flex>
         </form>
       </Flex>
