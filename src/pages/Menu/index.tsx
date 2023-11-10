@@ -5,21 +5,32 @@ import { config } from "../../project.config";
 
 export default function Menu() {
   const navigate = useNavigate();
-  const userId = localStorage.getItem("userId");
   const [score, setScore] = useState(null);
   const [time, setTime] = useState("");
 
-  useEffect(() => {
-    if (!userId) {
-      navigate("/");
-    }
-
-    fetch(`${config.NODE_URL}/users/${userId}`)
-      .then((response) => response.json())
-      .then((response) => {
-        setScore(response.score);
-        setTime(response.formattedTime);
+  async function handleGetUser() {
+    try {
+      const response = await fetch(`${config.NODE_URL}/user`, {
+        credentials: "include",
       });
+
+      const data = await response.json();
+
+      if (response.status === 401) {
+        localStorage.clear();
+        navigate("/");
+      }
+
+      setScore(data.score);
+      setTime(data.formattedTime);
+    } catch (e) {
+      console.error(e);
+      navigate("/login");
+    }
+  }
+
+  useEffect(() => {
+    handleGetUser();
   }, []);
 
   function handleLogout() {

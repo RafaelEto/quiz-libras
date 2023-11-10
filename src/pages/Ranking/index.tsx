@@ -17,7 +17,9 @@ export default function Ranking() {
   const [listUsers, setListUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    fetch(`${config.NODE_URL}/ranking`)
+    fetch(`${config.NODE_URL}/ranking`, {
+      credentials: "include",
+    })
       .then((response) => response.json())
       .then((response) => {
         setListUsers(response);

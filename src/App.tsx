@@ -7,6 +7,7 @@ import Quiz from "./pages/Quiz";
 import Ranking from "./pages/Ranking";
 import Menu from "./pages/Menu";
 import "./styles.css";
+import Register from "./pages/Register";
 
 const theme = extendTheme({
   fonts: {
@@ -22,6 +23,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route index path="/" element={<Login />} />
+            <Route index path="/register" element={<Register />} />
             <Route path="menu" element={<Menu />} />
             <Route path="quiz" element={<Quiz />} />
             <Route path="ranking" element={<Ranking />} />

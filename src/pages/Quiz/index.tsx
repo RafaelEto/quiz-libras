@@ -26,7 +26,9 @@ export default function Quiz() {
   const score = useRef(0);
 
   useEffect(() => {
-    fetch(`${config.NODE_URL}/questions`)
+    fetch(`${config.NODE_URL}/questions`, {
+      credentials: "include",
+    })
       .then((response) => response.json())
       .then((response) => {
         setQuestions(response);
@@ -56,6 +58,7 @@ export default function Quiz() {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
         }
       );
 
@@ -80,20 +83,16 @@ export default function Quiz() {
 
   async function handleFinishQuiz() {
     const time = totalTime - timeLeft;
-    const userId = localStorage.getItem("userId");
 
     try {
-      const response = await fetch(`${config.NODE_URL}/score/${userId}`, {
+      await fetch(`${config.NODE_URL}/score`, {
         method: "POST",
         body: JSON.stringify({ score: score.current, time }),
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       });
-      const responseData = await response.json();
-
-      localStorage.setItem("score", responseData.score);
-      localStorage.setItem("time", responseData.quizTime);
 
       navigate("/menu");
     } catch (error) {
