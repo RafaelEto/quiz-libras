@@ -1,6 +1,6 @@
 import { Button, Flex, Text } from "@chakra-ui/react";
 import { Question } from "../../typings/question.type";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 
 type QuizQuestionProps = {
@@ -18,6 +18,10 @@ export default function QuizQuestion({
     handleNextStep,
 }: QuizQuestionProps) {
     const [answerSelected, setAnswerSelected] = useState<AnswerSelected>();
+
+    useEffect(() => {
+        setAnswerSelected(undefined);
+    }, [question]);
 
     function handleAnswerSelect(key: string) {
         setAnswerSelected({
